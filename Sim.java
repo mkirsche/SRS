@@ -92,6 +92,7 @@ static void simulateReads() throws IOException
 	{
 		cq.removeCharacters(intervals.get(i).a - atStart);
 		atStart = intervals.get(i).a;
+		if(atEnd < atStart) atEnd = atStart;
 		if(intervals.get(i).b > atEnd)
 		{
 			cq.addRandomCharacters(intervals.get(i).b - atEnd);
