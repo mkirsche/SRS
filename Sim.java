@@ -1,6 +1,5 @@
 /*
  * Simulates a set of reads from a genome of a given length and a fixed (point mutation) error rate
- * TODO: Add reverse complement, using error rate to produce errors in reads
  */
 import java.io.*;
 import java.util.*;
@@ -96,6 +95,7 @@ static void simulateReads() throws IOException
 		if(intervals.get(i).b > atEnd)
 		{
 			cq.addRandomCharacters(intervals.get(i).b - atEnd);
+			atEnd = intervals.get(i).b;
 		}
 		String curRead = cq.errorSubstring(0, intervals.get(i).b - atStart);
 		int strand = r.nextInt(2);
