@@ -97,10 +97,24 @@ static void simulateReads() throws IOException
 		{
 			cq.addRandomCharacters(intervals.get(i).b - atEnd);
 		}
-		String curRead = cq.substring(0, intervals.get(i).b - atStart);
-		System.out.println(">read_"+intervals.get(i).a+"_"+intervals.get(i).b);
+		String curRead = cq.errorSubstring(0, intervals.get(i).b - atStart);
+		int strand = r.nextInt(2);
+		if(strand == 1)
+		{
+			curRead = revComp(curRead);
+		}
+		System.out.println(">read_"+intervals.get(i).a+"_"+intervals.get(i).b+"_"+strand);
 		System.out.println(curRead);
 	}
+}
+static String revComp(String s)
+{
+	char[] rc = new char[256];
+	rc[rc['A'] = 'T'] = 'A';
+	rc[rc['C'] = 'G'] = 'C';
+	char[] res = new char[s.length()];
+	for(int i = 0; i<s.length(); i++) res[i] = rc[s.charAt(s.length()-1-i)];
+	return new String(res);
 }
 static class Interval implements Comparable<Interval>
 {
@@ -129,6 +143,17 @@ static class CharacterQueue
 	int head;
 	int tail;
 	static char[] alpha = {'A', 'C', 'G', 'T'};
+	static int charToInt(char c)
+	{
+		for(int i = 0; i<alpha.length; i++)
+		{
+			if(c == alpha[i])
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
 	Random r;
 	CharacterQueue(int seed)
 	{
@@ -186,6 +211,31 @@ static class CharacterQueue
 		for(int i = 0; i<end-start; i++)
 		{
 			res[i] = data[at];
+			at++;
+			if(at == maxLength) at = 0;
+		}
+		return new String(res);
+	}
+	String errorSubstring(int start, int end)
+	{
+		int length = length();
+		if(start < 0) start = 0;
+		if(end > length) end = length;
+		char[] res = new char[end-start];
+		int at = head+start;
+		if(at > maxLength) at -= maxLength;
+		for(int i = 0; i<end-start; i++)
+		{
+			double rand = r.nextDouble();
+			if(rand < errorRate)
+			{
+				int offset = 1 + r.nextInt(3);
+				res[i] = alpha[(charToInt(data[at]) + offset)&3];
+			}
+			else
+			{
+				res[i] = data[at];
+			}
 			at++;
 			if(at == maxLength) at = 0;
 		}
