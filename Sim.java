@@ -208,7 +208,7 @@ static class CharacterQueue
 		if(end > length) end = length;
 		char[] res = new char[end-start];
 		int at = head+start;
-		if(at > maxLength) at -= maxLength;
+		if(at >= maxLength) at -= maxLength;
 		for(int i = 0; i<end-start; i++)
 		{
 			res[i] = data[at];
@@ -224,7 +224,7 @@ static class CharacterQueue
 		if(end > length) end = length;
 		char[] res = new char[end-start];
 		int at = head+start;
-		if(at > maxLength) at -= maxLength;
+		if(at >= maxLength) at -= maxLength;
 		for(int i = 0; i<end-start; i++)
 		{
 			double rand = r.nextDouble();
