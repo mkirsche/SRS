@@ -5,6 +5,7 @@ package SRS;
 
 import java.io.*;
 import java.util.*;
+import SRS.ReadUtils;
 
 public class Sim {
 	static double errorRate;
