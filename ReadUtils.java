@@ -1,13 +1,11 @@
+package SRS;
+
 import java.util.*;
 import java.io.*;
 public class ReadUtils {
 	static enum FileType {
 		EMPTY, FASTA, FASTQ;
 	};
-public static void  main(String[] args) throws IOException
-{
-	testGetLengths();
-}
 static void testGetLengths() throws IOException
 {
 	FileType[] fts = new FileType[] {FileType.FASTA, FileType.FASTQ, FileType.FASTA, FileType.FASTQ, FileType.FASTA};
@@ -98,6 +96,74 @@ static OrderedFrequencyMap<Integer> getLengths(String fn) throws IOException
 		res.add(curRead.length());
 	}
 	return res;
+}
+public static String getName(PeekableScanner input, FileType ft)
+{
+	if(!input.hasNext())
+	{
+		return null;
+	}
+	if(ft == FileType.FASTQ)
+	{
+		String res = "";
+		for(int i = 0; i<4; i++)
+		{
+			if(!input.hasNext())
+			{
+				return null;
+			}
+			if(i == 0)
+			{
+				res = input.nextLine();
+				if(res.length() != 0)
+				{
+					res = res.substring(1);
+				}
+				else
+				{
+					res = null;
+				}
+			}
+			else
+			{
+				input.nextLine();
+			}
+		}
+		return res;
+	}
+	else if(ft == FileType.FASTA)
+	{
+		if(!input.hasNext())
+		{
+			return null;
+		}
+		String res = input.nextLine();
+		
+		if(res.length() != 0)
+		{
+			res =  res.substring(1);
+		}
+		else
+		{
+			res = null;
+		}
+		
+		while(input.hasNext())
+		{
+			String curLine = input.peekLine();
+			if(curLine.length() == 0 || curLine.startsWith(">"))
+			{
+				break;
+			}
+			input.nextLine();
+		}
+		
+		return res;
+	}
+	else
+	{
+		return null;
+	}
 }
 /*
  * Scans the next read and returns the sequence associated with it

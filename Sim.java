@@ -1,6 +1,8 @@
 /*
  * Simulates a set of reads from a genome of a given length and a fixed (point mutation) error rate
  */
+package SRS;
+
 import java.io.*;
 import java.util.*;
 

@@ -1,3 +1,5 @@
+package SRS;
+
 /*
  * Filter contained reads from a PacBio dataset
  * Algorithm tuned to handle error rates of 10-15%
