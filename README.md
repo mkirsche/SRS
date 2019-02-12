@@ -1,1 +1,2 @@
 # SRS
+java SRS.<filetorun>
