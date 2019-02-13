@@ -9,7 +9,7 @@ from matplotlib import colors as mcolors
 
 fn = sys.argv[1]
 
-uncOnly = False
+uncOnly = True
 
 cts = []
 lens = []
