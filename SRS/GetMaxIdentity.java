@@ -82,8 +82,6 @@ public static void main(String[] args) throws Exception
 	
 	parseArgs(args);
 	
-	ofn = fn + "_ct.txt";
-	
 	// Initialize input reader and global variables
 	BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(fn)));
 	map = new ConcurrentHashMap<>();
@@ -223,9 +221,10 @@ static void parseArgs(String[] args)
 		System.out.println("  w1=[w1 (int)]");
 		System.out.println("  k2=[k2 (int)]");
 		System.out.println("  w2=[w2 (int)]");
-		System.out.println("  fnonly");
+		System.out.println("  ofn=[out fn]");
 	}
 	fn = args[0];
+	ofn = fn + "_ct.txt";
 	for(int i = 1; i<args.length; i++)
 	{
 		if(args[i].startsWith("nt="))
@@ -247,6 +246,10 @@ static void parseArgs(String[] args)
 		else if(args[i].startsWith("w2="))
 		{
 			W2 = Integer.parseInt(args[i].substring(1 + args[i].indexOf('=')));
+		}
+		else if(args[i].startsWith("ofn="))
+		{
+			ofn = args[i].substring(1 + args[i].indexOf('='));
 		}
 	}
 }
