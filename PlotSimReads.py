@@ -9,6 +9,8 @@ from matplotlib import colors as mcolors
 
 fn = sys.argv[1]
 
+uncOnly = False
+
 cts = []
 lens = []
 colors = []
@@ -22,6 +24,9 @@ with open(fn) as f:
         ct = float(tokens[1])
         category = int(tokens[2])
         
+        if uncOnly and category != 1:
+            continue
+        
         cts.append(ct)
         
         splitname = name.split('_')
@@ -34,14 +39,30 @@ plt.scatter(cts, lens, c=colors, s = 1)
 plt.title('Simulated results')
 plt.xlabel('Max kmers shared')
 plt.ylabel('Read length')
-plt.savefig('sim.png')
+curfn = 'sim.png'
+if uncOnly:
+    curfn = 'unc_sim.png'
+plt.savefig(curfn)
 plt.close()
 plt.cla()
 plt.clf()
 
 plt.hist(lens, bins = [1000*i for i in range(0, 100)])
 plt.title('Simulated read lengths')
-plt.savefig('simlengths.png')
+curfn = 'simlengths.png'
+plt.savefig(curfn)
+if uncOnly:
+    curfn = 'unc_simlengths.png'
+plt.close()
+plt.cla()
+plt.clf()
+
+plt.hist(cts, bins = [0.01*i for i in range(0, 100)])
+plt.title('Simulated maxshared')
+curfn = 'simshared.png'
+if uncOnly:
+    curfn = 'unc_simshared.png'
+plt.savefig(curfn)
 plt.close()
 plt.cla()
 plt.clf()
