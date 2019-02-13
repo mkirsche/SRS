@@ -9,7 +9,7 @@ from matplotlib import colors as mcolors
 
 fn = sys.argv[1]
 
-uncOnly = True
+uncOnly = False
 
 cts = []
 lens = []
@@ -57,7 +57,7 @@ plt.close()
 plt.cla()
 plt.clf()
 
-plt.hist(cts, bins = [0.01*i for i in range(0, 100)])
+plt.hist(cts, bins = [0.00001*i for i in range(0, 500)])
 plt.title('Simulated maxshared')
 curfn = 'simshared.png'
 if uncOnly:
