@@ -12,6 +12,8 @@ public class Sim {
 	static int genomeLength;
 	static int coverage;
 	static String sampleFn;
+	static String refFn;
+	static PrintWriter refOut;
 public static void main(String[] args) throws IOException
 {
 	if(parseArgs(args) != 0)
@@ -23,12 +25,13 @@ public static void main(String[] args) throws IOException
 }
 static void usage()
 {
-	System.out.println("java Sim -l <genomeLength> -c <coverage> -s <sampleFn> -e <errorRate>");
+	System.out.println("java Sim -l <genomeLength> -c <coverage> -s <sampleFn> -e <errorRate> [-r <refFn>]");
 	System.out.println("\nArgs:");
 	System.out.println("\tgenomeLength: The length of the genome to simulate reads from");
 	System.out.println("\tcoverage: The coverage of reads to simulate");
 	System.out.println("\tsampleFn: A file of the type of reads being used for getting the length distribution");
 	System.out.println("\terrorRate: The proportion of (point) mutations to use");
+	System.out.println("\trefFn (optional): The filename to output reference genome to");
 }
 static int parseArgs(String[] args)
 {
@@ -56,6 +59,10 @@ static int parseArgs(String[] args)
 			{
 				hasSample = true;
 				sampleFn = args[i+1];
+			}
+			else if(args[i].equalsIgnoreCase("-r"))
+			{
+				refOut = new PrintWriter(new File(args[i+1]));
 			}
 		}
 		if(!hasLength || !hasCoverage || !hasError || !hasSample)
@@ -89,13 +96,36 @@ static void simulateReads() throws IOException
 	}
 	Collections.sort(intervals);
 	int atStart = intervals.get(0).a, atEnd = intervals.get(0).a;
+	if(refOut != null)
+	{
+		refOut.println(">ref");
+	}
+	if(atStart != 0 && refOut != null)
+	{
+		for(int j = 0; j<atStart; j++)
+		{
+			char c = CharacterQueue.alpha[r.nextInt(CharacterQueue.alpha.length)];
+			refOut.print(c);
+		}
+	}
 	int n = intervals.size();
 	CharacterQueue cq = new CharacterQueue(101);
 	for(int i = 0; i<n; i++)
 	{
 		cq.removeCharacters(intervals.get(i).a - atStart);
 		atStart = intervals.get(i).a;
-		if(atEnd < atStart) atEnd = atStart;
+		if(atEnd < atStart)
+		{
+			if(refOut != null)
+			{
+				for(int j = 0; j<atEnd-atStart; j++)
+				{
+					char c = CharacterQueue.alpha[r.nextInt(CharacterQueue.alpha.length)];
+					refOut.print(c);
+				}
+			}
+			atEnd = atStart;
+		}
 		if(intervals.get(i).b > atEnd)
 		{
 			cq.addRandomCharacters(intervals.get(i).b - atEnd);
@@ -109,6 +139,10 @@ static void simulateReads() throws IOException
 		}
 		System.out.println(">read_"+intervals.get(i).a+"_"+intervals.get(i).b+"_"+strand);
 		System.out.println(curRead);
+	}
+	if(refOut != null)
+	{
+		refOut.close();
 	}
 }
 static String revComp(String s)
@@ -189,6 +223,10 @@ static class CharacterQueue
 		for(int i = 0; i<count; i++)
 		{
 			data[tail] = alpha[r.nextInt(alpha.length)];
+			if(refOut != null)
+			{
+				refOut.print(data[tail]);
+			}
 			tail++;
 			if(tail == maxLength) tail = 0;
 		}
