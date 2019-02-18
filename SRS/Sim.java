@@ -142,6 +142,15 @@ static void simulateReads() throws IOException
 	}
 	if(refOut != null)
 	{
+		if(atEnd != genomeLength)
+		{
+			for(int j = 0; j<genomeLength - atEnd; j++)
+			{
+				char c = CharacterQueue.alpha[r.nextInt(CharacterQueue.alpha.length)];
+				refOut.print(c);
+			}
+		}
+		refOut.println();
 		refOut.close();
 	}
 }
