@@ -166,6 +166,76 @@ public static String getName(PeekableScanner input, FileType ft)
 	}
 }
 /*
+ * Scans the next read and returns its name and sequence
+ */
+static String[] getLabelledRead(PeekableScanner input, FileType ft)
+{
+	String[] res = new String[2];
+	if(!input.hasNext())
+	{
+		return null;
+	}
+	if(ft == FileType.FASTQ)
+	{
+		for(int i = 0; i<4; i++)
+		{
+			if(!input.hasNext())
+			{
+				return null;
+			}
+			if(i == 0) res[0] = input.nextLine();
+			else if(i == 1) res[1] = input.nextLine();
+			else input.nextLine();
+		}
+		if(res[0].length() == 0)
+		{
+			return null;
+		}
+		else
+		{
+			res[0] = res[0].substring(1);
+		}
+		return res;
+	}
+	else if(ft == FileType.FASTA)
+	{
+		if(!input.hasNext())
+		{
+			return null;
+		}
+		res[0] = input.nextLine();
+		
+		StringBuilder sb = new StringBuilder("");
+		
+		while(input.hasNext())
+		{
+			String curLine = input.peekLine();
+			if(curLine.length() == 0 || curLine.startsWith(">"))
+			{
+				break;
+			}
+			sb.append(input.nextLine());
+		}
+		
+		res[1] = sb.toString();
+		
+		if(res[0].length() == 0)
+		{
+			return null;
+		}
+		else
+		{
+			res[0] = res[0].substring(1);
+		}
+		
+		return res;
+	}
+	else
+	{
+		return null;
+	}
+}
+/*
  * Scans the next read and returns the sequence associated with it
  */
 static String getUnlabelledRead(PeekableScanner input, FileType ft)
