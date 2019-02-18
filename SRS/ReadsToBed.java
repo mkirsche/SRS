@@ -19,7 +19,7 @@ public static void main(String[] args) throws IOException
 		String name = ReadUtils.getName(input, ft);
 		String[] parts = name.split("_");
 		System.out.print("ref");
-		for(int i = 0; i<parts.length; i++)
+		for(int i = 1; i<parts.length; i++)
 		{
 			System.out.print("\t" + parts[i]);
 		}
