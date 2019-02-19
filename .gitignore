@@ -1,2 +1,5 @@
 *.class
-
+alignments/*
+*.fasta
+*.txt
+*.fastq
